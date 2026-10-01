@@ -1,6 +1,6 @@
 import express from 'express';
-import authRoutes from './routes/auth.routes';
-import snailPayRoutes from './routes/snailpay.routes'; // <-- Importar
+import authRoutes from './routes/auth.routes.js';
+import snailPayRoutes from './routes/snailpay.routes.js'; // <-- Importar
 
 const app = express();
 const PORT = 3000;
