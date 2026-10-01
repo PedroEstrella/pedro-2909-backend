@@ -1,34 +1,19 @@
 import express from 'express';
+import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
 import snailPayRoutes from './routes/snailpay.routes.js'; // <-- Importar
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Render inyecta dinámicamente el puerto
 
 app.use(express.json());
 
-// Configuración de CORS
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'https://pedro-2909-frontend.vercel.app/login', // URL de Vercel
-    'http://localhost:5173' // Soporte para desarrollo local
-  ];
-  
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-SnailPay-Simulation');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  
-  // Manejo de peticiones preflight OPTIONS (Crítico para despliegues en la nube)
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  
-  next();
-});
+// CONFIGURACIÓN DE CORS GLOBAL COMPATIBLE CON CUALQUIER SUBDOMINIO DE VERCEL
+app.use(cors({
+  origin: '*', // Permite el acceso temporal desde cualquier origen en la nube
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-SnailPay-Simulation']
+}));
 
 // Rutas de la Aplicación
 // Enrutador de Autenticación
