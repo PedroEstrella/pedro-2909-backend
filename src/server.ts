@@ -9,9 +9,24 @@ app.use(express.json());
 
 // Configuración de CORS
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  const allowedOrigins = [
+    'https://pedro-2909-frontend.vercel.app/login', // URL de Vercel
+    'http://localhost:5173' // Soporte para desarrollo local
+  ];
+  
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-SnailPay-Simulation');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  // Manejo de peticiones preflight OPTIONS (Crítico para despliegues en la nube)
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
   next();
 });
 
